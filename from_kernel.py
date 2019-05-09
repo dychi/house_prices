@@ -27,7 +27,25 @@ ax = sns.distplot(train_labels)
 
 #%% 
 # 特徴量設計
+# 標準化
+num_df = train_df.select_dtypes(exclude='O')
+num_df.head()
 
+#%%
+num_features = num_df.iloc[:,['LotFrontage', 'LotArea', 'GrLivArea', 'TotalSF']]
+
+#%%
+from sklearn.preprocessing import StandardScaler
+
+#%%
+stdsc = StandardScaler()
+std_vec = stdsc.fit_transform(num_df.LotFrontage.values[:,np.newaxis])
+std_vec
+
+#%% 
+feat = num_df.LotFrontage.values
+feat_std = (feat - feat.mean()) / feat.std()
+feat_std
 
 #%%
 # 学習データ、テストデータを分割
