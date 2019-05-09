@@ -9,14 +9,21 @@ import seaborn as sns
 import warnings
 warnings.filterwarnings('ignore')
 
-
-
 #%%
 train_df = pd.read_csv('./data/train.csv')
 test_df = pd.read_csv('./data/test.csv')
 
 #%%
 train_df.head()
+
+#%%
+NAs = pd.concat([train_df.isnull().sum(), test_df.isnull().sum()], axis=1, keys=['Train', 'Test'])
+# 欠損値が含まれているものを出力
+NAs[NAs.sum(axis=1) > 0]
+
+#%%
+train_labels = train_df.SalePrice
+ax = sns.distplot(train_labels)
 
 #%%
 train_df.plot(kind='scatter', x=u'LotFrontage', y=u'SalePrice')
@@ -27,11 +34,18 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 #%%
 mms = MinMaxScaler()
-mms.fit_transform(train_df[["LotFrontage"]].values)
+mms.fit_transform(train_df[["GrLivArea"]].values)
 
 #%%
 stdsc = StandardScaler()
-stdsc.fit_transform(train_df[['LotFrontage']].values)
+GrLivArea_std = stdsc.fit_transform(train_df[['GrLivArea']].values)
+grlivarea_df = pd.DataFrame({'x': train_df.GrLivArea.values, 'y': GrLivArea_std[:,0]})
+grlivarea_df.plot(kind='hist')
+
+#%%
+display(GrLivArea_std[:,0].shape)
+display(train_df.GrLivArea.values.shape)
+
 
 #%%
 train_df.plot(kind='hist', x=u'LotFrontage', y=u'SalePrice', bins=200)
@@ -82,6 +96,7 @@ ax = fig.gca()
 df_num.plot(kind='hist', bins=50, subplots=True, ax=ax)
 
 #%%
+from sklearn.
 from sklearn.model_selection import KFold
 
 #%%
